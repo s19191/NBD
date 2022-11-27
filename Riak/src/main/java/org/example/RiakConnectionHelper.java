@@ -5,7 +5,7 @@ import com.basho.riak.client.core.RiakNode;
 
 public class RiakConnectionHelper {
     protected static RiakCluster setUpCluster() {
-        // This example will use only one node listening on localhost:10017
+        // This example will use only one node listening on localhost:8087
         RiakNode node = new RiakNode.Builder()
                 .withRemoteAddress("127.0.0.1")
                 .withRemotePort(8087)
