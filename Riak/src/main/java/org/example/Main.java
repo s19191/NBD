@@ -1,15 +1,17 @@
 package org.example;
 
 import com.basho.riak.client.api.RiakClient;
+import com.basho.riak.client.api.cap.Quorum;
 import com.basho.riak.client.api.commands.kv.DeleteValue;
+import com.basho.riak.client.api.commands.kv.FetchValue;
 import com.basho.riak.client.api.commands.kv.StoreValue;
+import com.basho.riak.client.api.commands.kv.UpdateValue;
 import com.basho.riak.client.core.RiakCluster;
 import com.basho.riak.client.core.RiakNode;
 import com.basho.riak.client.core.query.Location;
 import com.basho.riak.client.core.query.Namespace;
 import com.basho.riak.client.core.query.RiakObject;
 import com.basho.riak.client.core.util.BinaryValue;
-import java.net.UnknownHostException;
 
 public class Main {
 
@@ -72,9 +74,35 @@ public class Main {
             client.execute(storeToyotaOp);
             System.out.println("Toyota saved as object");
 
-//            Location geniusQuote = new Location(new Namespace("s19191"), "mark");
-//            DeleteValue delete = new DeleteValue.Builder(geniusQuote).build();
-//            client.execute(delete);
+            Location readKey = new Location(new Namespace("s19191"), "mark");
+            FetchValue fetch = new FetchValue.Builder(readKey)
+                    .withOption(FetchValue.Option.R, new Quorum(3))
+                    .build();
+            FetchValue.Response readResponse = client.execute(fetch);
+            RiakObject readObj = readResponse.getValue(RiakObject.class);
+            System.out.println(readObj.getValue());
+
+            Mark.age = 50;
+            PeopleUpdate updatedBook = new PeopleUpdate(Mark);
+            UpdateValue updateValue = new UpdateValue.Builder(markLocation)
+                    .withUpdate(updatedBook).build();
+            UpdateValue.Response responseForUpdate = client.execute(updateValue);
+
+            System.out.println("Mark updated");
+
+            FetchValue.Response readResponseAfterUpdate = client.execute(fetch);
+            RiakObject readObjAfterUpdate = readResponseAfterUpdate.getValue(RiakObject.class);
+            System.out.println(readObjAfterUpdate.getValue());
+
+            Location geniusQuote = new Location(new Namespace("s19191"), "mark");
+            DeleteValue delete = new DeleteValue.Builder(geniusQuote).build();
+            client.execute(delete);
+
+            System.out.println("Mark deleted");
+
+            FetchValue.Response readResponseAfterRemoval = client.execute(fetch);
+            RiakObject readObjAfterRemoval = readResponseAfterRemoval.getValue(RiakObject.class);
+            System.out.println(readObjAfterRemoval.getValue());
 
             cluster.shutdown();
         } catch (Exception e) {
