@@ -1,6 +1,7 @@
 package org.example;
 
 import com.basho.riak.client.api.RiakClient;
+import com.basho.riak.client.api.commands.kv.DeleteValue;
 import com.basho.riak.client.api.commands.kv.StoreValue;
 import com.basho.riak.client.core.RiakCluster;
 import com.basho.riak.client.core.RiakNode;
@@ -34,6 +35,7 @@ public class Main {
             RiakClient client = new RiakClient(cluster);
 
             Namespace s19191Bucket = new Namespace("s19191");
+
             Location meLocation = new Location(s19191Bucket, "me");
             BinaryValue text = BinaryValue.create("{\n" +
                     "    \"name\" : \"Jan\",\n" +
@@ -50,8 +52,27 @@ public class Main {
                     .build();
 
             client.execute(storeMeOp);
+            System.out.println("Me saved as String");
 
-//            Location geniusQuote = new Location(new Namespace("s19191"), "me");
+            People Mark = new People("Mark", "Kowalski", 99, true);
+            Location markLocation = new Location(s19191Bucket, "mark");
+            StoreValue storeMarkOp = new StoreValue.Builder(Mark)
+                    .withLocation(markLocation)
+                    .build();
+
+            client.execute(storeMarkOp);
+            System.out.println("Mark saved as object");
+
+            Car Toyota = new Car("Mark", 2010, 7.6);
+            Location toyotaLocation = new Location(s19191Bucket, "toyota");
+            StoreValue storeToyotaOp = new StoreValue.Builder(Toyota)
+                    .withLocation(toyotaLocation)
+                    .build();
+
+            client.execute(storeToyotaOp);
+            System.out.println("Toyota saved as object");
+
+//            Location geniusQuote = new Location(new Namespace("s19191"), "mark");
 //            DeleteValue delete = new DeleteValue.Builder(geniusQuote).build();
 //            client.execute(delete);
 
@@ -59,6 +80,5 @@ public class Main {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Hello world!");
     }
 }
