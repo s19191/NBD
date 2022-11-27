@@ -25,8 +25,6 @@ public class Task02 {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             cluster.shutdown();
-        } finally {
-            cluster.shutdown();
         }
     }
 }
