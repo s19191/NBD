@@ -7,33 +7,16 @@ import com.basho.riak.client.api.commands.kv.FetchValue;
 import com.basho.riak.client.api.commands.kv.StoreValue;
 import com.basho.riak.client.api.commands.kv.UpdateValue;
 import com.basho.riak.client.core.RiakCluster;
-import com.basho.riak.client.core.RiakNode;
 import com.basho.riak.client.core.query.Location;
 import com.basho.riak.client.core.query.Namespace;
 import com.basho.riak.client.core.query.RiakObject;
 import com.basho.riak.client.core.util.BinaryValue;
 
-public class Main {
-
-    private static RiakCluster setUpCluster() {
-        // This example will use only one node listening on localhost:10017
-        RiakNode node = new RiakNode.Builder()
-                .withRemoteAddress("127.0.0.1")
-                .withRemotePort(8087)
-                .build();
-
-        // This cluster object takes our one node as an argument
-        RiakCluster cluster = new RiakCluster.Builder(node)
-                .build();
-
-        // The cluster must be started to work, otherwise you will see errors
-        cluster.start();
-
-        return cluster;
-    }
+public class Task01 {
     public static void main(String[] args) {
+        RiakCluster cluster = null;
         try {
-            RiakCluster cluster = setUpCluster();
+            cluster = RiakConnectionHelper.setUpCluster();
             RiakClient client = new RiakClient(cluster);
 
             Namespace s19191Bucket = new Namespace("s19191");
@@ -80,6 +63,7 @@ public class Main {
                     .build();
             FetchValue.Response readResponse = client.execute(fetch);
             RiakObject readObj = readResponse.getValue(RiakObject.class);
+            System.out.println("Mark read before update");
             System.out.println(readObj.getValue());
 
             Mark.age = 50;
@@ -92,6 +76,7 @@ public class Main {
 
             FetchValue.Response readResponseAfterUpdate = client.execute(fetch);
             RiakObject readObjAfterUpdate = readResponseAfterUpdate.getValue(RiakObject.class);
+            System.out.println("Mark read after update");
             System.out.println(readObjAfterUpdate.getValue());
 
             Location geniusQuote = new Location(new Namespace("s19191"), "mark");
@@ -102,11 +87,18 @@ public class Main {
 
             FetchValue.Response readResponseAfterRemoval = client.execute(fetch);
             RiakObject readObjAfterRemoval = readResponseAfterRemoval.getValue(RiakObject.class);
-            System.out.println(readObjAfterRemoval.getValue());
+            try {
+                System.out.println(readObjAfterRemoval.getValue());
+            } catch (NullPointerException nullPointerException) {
+                System.out.println(nullPointerException.getMessage());
+            }
 
             cluster.shutdown();
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            cluster.shutdown();
+        } finally {
+            cluster.shutdown();
         }
     }
 }
