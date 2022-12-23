@@ -1,0 +1,10 @@
+Performance{timestamp=Fri Dec 23 22:18:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=0.0, GPU=43.88383913031089}
+Performance{timestamp=Fri Dec 23 22:19:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=1.3171830188891898, GPU=53.033330753974326}
+Performance{timestamp=Fri Dec 23 22:20:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=1.1477158988993374, GPU=12.6007265442602}
+Performance{timestamp=Fri Dec 23 22:21:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=1.0869995451654346, GPU=87.932500859324}
+Performance{timestamp=Fri Dec 23 22:22:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=1.4633165401422232, GPU=98.59748167386749}
+Performance{timestamp=Fri Dec 23 22:23:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=1.5415020768776433, GPU=16.95432766456344}
+Performance{timestamp=Fri Dec 23 22:24:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=1.4295908122418322, GPU=68.7230397978497}
+Performance{timestamp=Fri Dec 23 22:25:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=0.9589985201964857, GPU=72.35478125333526}
+Performance{timestamp=Fri Dec 23 22:26:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=1.1727589947640338, GPU=40.672854117287905}
+Performance{timestamp=Fri Dec 23 22:27:30 CET 2022, hostName='Dell', ipAddress='192.168.37.18', CPU=1.2333801843118164, GPU=13.62238738021172}
