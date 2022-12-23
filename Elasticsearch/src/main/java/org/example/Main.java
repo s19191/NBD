@@ -27,6 +27,10 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) {
         try {
+            /**
+             * Tworzenie połączenia.
+             */
+
             // Create the low-level client
             RestClient httpClient = RestClient.builder(
                     new HttpHost("localhost", 9200)
@@ -40,9 +44,19 @@ public class Main {
 
             ElasticsearchClient esClient = new ElasticsearchClient(transport);
 
+            /**
+             * Tworzenie Indexu.
+             */
+
             esClient.indices().create(c -> c.index("s19191_performance_data"));
+
+            /**
+             * Task do wykonywania cyklicznie co minutę
+             */
+
             TimerTask repeatedTask = new TimerTask() {
                 public void run() {
+                    //Po to żeby sprawdzić na konsoli, czy co minute zczytuje dane.
                     System.out.println("Task performed on " + new Date());
                     try {
                         Double CPU = getCPUUsage();
@@ -58,6 +72,11 @@ public class Main {
                     }
                 }
             };
+
+            /**
+             * Executor, który będzie wykonywać ten task
+             */
+
             ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
             long delay  = 0L;
             long period = 60000L;
@@ -65,8 +84,12 @@ public class Main {
             Thread.sleep(delay + period * 14);
             executor.shutdown();
 
-            System.out.println(executor.isShutdown());
             if (executor.isShutdown()) {
+
+                /**
+                 * Odczytywanie danych oraz zapis do osobnego pliku. On będzie w folderze projektu oraz osobno.
+                 */
+
                 SearchResponse<Performance> response = esClient.search(s -> s
                                 .index("s19191_performance_data")
                                 .size(100),
@@ -102,6 +125,10 @@ public class Main {
      * Metoda ta powinna zwracać użycie GPU karty NVIDIA w moim komputerze, zwracała ona natomiast same zera.
      * Było to w miarę zgodne z prawdą, gdyż mój laptop posiada jeszcze drugą kartę graficzną zintegrowaną Intela.
      * Nie znalazłem metody, żeby konkretnie znaleść wyniki tej karty, więc w zadaniu użyłem Math.random.
+     */
+
+    /**
+     * Teraz wiem, że chodziło o RAM, ale to też nie jest takie proste, więc już zostawię tak jak jest.
      */
     public static Double getGPUUsage() {
         try {
